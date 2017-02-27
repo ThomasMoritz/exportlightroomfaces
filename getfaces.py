@@ -28,7 +28,7 @@ cursor = conn.execute(
 # iterate over all images the contain the face
 for row in cursor:
     img = Image.open(row['absolutePath'] + row['pathFromRoot'] + row['baseName'] + '.' + row['extension'])
-    print row['absolutePath'] + row['pathFromRoot'] + row['baseName'] + '.' + row['extension']
+    print (row['absolutePath'] + row['pathFromRoot'] + row['baseName'] + '.' + row['extension'])
     x_size, y_size = img.size
     orientation = ""
 
