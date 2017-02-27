@@ -16,7 +16,7 @@ $ pip install -r requirements.txt
 
 
 ```shell
-$ ./getfaces.py -d <path to Lightroom DB> -o <output path> -n <Name of the person>
+$ ./getfaces.py -d <path to Lightroom DB File> -o <output path> -n <Name of the person>
 ```
 
 <h3>License</h3>
