@@ -1,6 +1,6 @@
 # Export Adobe Lightroom Faces
 
-This script exports tagged faces from the Adobe Lightroom SQLlite Database. Just give the script a name you entered in Lightroom and you get JPGs just with the faces and not the whole image.
+This script exports tagged faces from the Adobe Lightroom CC SQLlite Database. Just give the script a name you entered in Lightroom and you get JPGs just with the faces and not the whole image.
 
 ### 1. Install dependencies
 
@@ -16,7 +16,7 @@ $ pip install -r requirements.txt
 
 
 ```shell
-$ ./getfaces.py -d <path to Lightroom DB File> -o <output path> -n <Name of the person> [-ee extension1, extension2,...]
+$ ./getfaces.py -d <path to Lightroom DB File> -o <output path> -n <Name of the person> [-ee extension1, extension2,... -cf <clipping factor>]
 ```
 
 <h3>License</h3>

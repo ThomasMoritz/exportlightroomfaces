@@ -14,6 +14,7 @@ parser.add_argument('-d', '--database', help='Input Database', required=True)
 parser.add_argument('-o', '--output', help='Output Directory', required=True)
 parser.add_argument('-n', '--name', help='Name of Person', required=True)
 parser.add_argument('-ee', '--exclude_extensions', help='File extensions to exclude', required=False)
+parser.add_argument('-cf', '--clipping_factor', help='Space around the face', required=False)
 
 args = parser.parse_args()
 # Transform extension Argument to exclude
@@ -24,6 +25,13 @@ if args.exclude_extensions is not None:
 else:
     excludeExtensions=''
 
+    # set the space around the face
+if args.clipping_factor is not None and args.clipping_factor.isdigit():
+    clipping_factor = int(args.clipping_factor)
+else: #default
+    clipping_factor = 75
+
+print clipping_factor
 # Add trailing slash to output path if missing
 output_path = os.path.join(args.output, '')
 # get the working directory
@@ -68,8 +76,6 @@ for row in cursor:
     img.save('temp.' + row['extension'], exif=exif_bytes)
     img2 = Image.open('temp.' + row['extension'])
     x_new_size, y_new_size = img2.size
-    # set the space around the face
-    clipping_factor = 75
     # calculate Image Size based on Image orientation
     if orientation == 6 or orientation == 8 or orientation == -1:
         top_x = row['tl_x'] * y_size
