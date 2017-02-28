@@ -23,15 +23,14 @@ if args.exclude_extensions is not None:
     excludeExtensions = excludeExtensions.split(",")
     excludeExtensions = ', '.join('"{0}"'.format(w) for w in excludeExtensions)
 else:
-    excludeExtensions=''
+    excludeExtensions = ''
 
     # set the space around the face
 if args.clipping_factor is not None and args.clipping_factor.isdigit():
     clipping_factor = int(args.clipping_factor)
-else: #default
+else:  # default
     clipping_factor = 75
 
-print clipping_factor
 # Add trailing slash to output path if missing
 output_path = os.path.join(args.output, '')
 # get the working directory
@@ -41,7 +40,7 @@ db_path = os.path.join(BASE_DIR, args.database)
 conn = sqlite3.connect(db_path)
 conn.row_factory = sqlite3.Row
 cursor = conn.execute(
-    'select Folder.pathFromRoot, File.baseName, File.extension, File.folder,Hist.*, Faces.*, kwf.*,kw.*,rf.* from  Adobe_libraryImageFaceProcessHistory AS Hist inner join Adobe_images AS Img ON Hist.image = Img.id_local  inner join AgLibraryFile AS File on  Img.rootFile = File.id_local inner join AgLibraryFolder AS Folder on File.folder = Folder.id_local inner join AgLibraryFace AS Faces on Hist.image = Faces.image inner join AgLibraryKeywordFace As kwf  on Faces.id_local = kwf.face inner join AgLibraryKeyword as kw on kwf.tag = kw.id_local inner join AgLibraryRootFolder as rf on Folder.rootFolder = rf.id_local where lc_name  like "' + args.name + '" and lower(File.extension) not in ('+excludeExtensions.lower()+')   order by dateCreated ')
+    'select Folder.pathFromRoot, File.baseName, File.extension, File.folder,Hist.*, Faces.*, kwf.*,kw.*,rf.* from  Adobe_libraryImageFaceProcessHistory AS Hist inner join Adobe_images AS Img ON Hist.image = Img.id_local  inner join AgLibraryFile AS File on  Img.rootFile = File.id_local inner join AgLibraryFolder AS Folder on File.folder = Folder.id_local inner join AgLibraryFace AS Faces on Hist.image = Faces.image inner join AgLibraryKeywordFace As kwf  on Faces.id_local = kwf.face inner join AgLibraryKeyword as kw on kwf.tag = kw.id_local inner join AgLibraryRootFolder as rf on Folder.rootFolder = rf.id_local where lc_name  like "' + args.name + '" and lower(File.extension) not in (' + excludeExtensions.lower() + ')   order by dateCreated ')
 # iterate over all images the contain the face
 for row in cursor:
     img = Image.open(row['absolutePath'] + row['pathFromRoot'] + row['baseName'] + '.' + row['extension'])
