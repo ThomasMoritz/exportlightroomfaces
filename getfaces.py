@@ -88,7 +88,7 @@ for row in cursor:
         bottom_y = row['br_y'] * y_size
 
     # Extend the Clipping
-    while True:
+    while clipping_factor>0:
         d_top_x = int(top_x - clipping_factor)
         d_top_y = int(top_y - clipping_factor)
         d_bottom_x = int(bottom_x + clipping_factor)
@@ -101,8 +101,8 @@ for row in cursor:
             bottom_x = int(bottom_x + clipping_factor)
             bottom_y = int(bottom_y + clipping_factor)
             break
-            # decrement factor till it fits
-            clipping_factor -= 1
+        # decrement factor till it fits
+        clipping_factor -= 1
     # finaly - crop the image
     img3 = img2.crop((top_x, top_y, bottom_x, bottom_y))
     # dump the old exif data to the image
