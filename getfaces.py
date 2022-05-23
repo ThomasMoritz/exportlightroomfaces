@@ -10,7 +10,7 @@ import argparse
 # Commandline Handling
 
 parser = argparse.ArgumentParser(description='Export faces from Lightroom DB')
-parser.add_argument('-d', '--database', help='Input Database', required=True)
+parser.add_argument('-d', '--database', help=r"Input Database (e.g. C:\Users\...\Pictures\Lightroom\Lightroom Catalog.lrcat)", required=True)
 parser.add_argument('-o', '--output', help='Output Directory', required=True)
 parser.add_argument('-n', '--name', help='Name of Person', required=True)
 parser.add_argument('-ee', '--exclude_extensions', help='File extensions to exclude', required=False)
@@ -40,7 +40,7 @@ db_path = os.path.join(BASE_DIR, args.database)
 conn = sqlite3.connect(db_path)
 conn.row_factory = sqlite3.Row
 cursor = conn.execute(
-    'select Folder.pathFromRoot, File.baseName, File.extension, File.folder,Hist.*, Faces.*, kwf.*,kw.*,rf.* from  Adobe_libraryImageFaceProcessHistory AS Hist inner join Adobe_images AS Img ON Hist.image = Img.id_local  inner join AgLibraryFile AS File on  Img.rootFile = File.id_local inner join AgLibraryFolder AS Folder on File.folder = Folder.id_local inner join AgLibraryFace AS Faces on Hist.image = Faces.image inner join AgLibraryKeywordFace As kwf  on Faces.id_local = kwf.face inner join AgLibraryKeyword as kw on kwf.tag = kw.id_local inner join AgLibraryRootFolder as rf on Folder.rootFolder = rf.id_local where lc_name  like "' + args.name + '" and lower(File.extension) not in (' + excludeExtensions.lower() + ')   order by dateCreated ')
+    'select Folder.pathFromRoot, File.baseName, File.extension, File.folder,Hist.*, Faces.*, kwf.*,kw.*,rf.* from  Adobe_libraryImageFaceProcessHistory AS Hist inner join Adobe_images AS Img ON Hist.image = Img.id_local  inner join AgLibraryFile AS File on  Img.rootFile = File.id_local inner join AgLibraryFolder AS Folder on File.folder = Folder.id_local inner join AgLibraryFace AS Faces on Hist.image = Faces.image inner join AgLibraryKeywordFace As kwf  on Faces.id_local = kwf.face inner join AgLibraryKeyword as kw on kwf.tag = kw.id_local inner join AgLibraryRootFolder as rf on Folder.rootFolder = rf.id_local where userPick=1 and lc_name  = "' + args.name + '" and lower(File.extension) not in (' + excludeExtensions.lower() + ')   order by dateCreated ')
 # iterate over all images the contain the face
 for row in cursor:
     img = Image.open(row['absolutePath'] + row['pathFromRoot'] + row['baseName'] + '.' + row['extension'])
@@ -88,7 +88,7 @@ for row in cursor:
         bottom_y = row['br_y'] * y_size
 
     # Extend the Clipping
-    while True:
+    while clipping_factor>0:
         d_top_x = int(top_x - clipping_factor)
         d_top_y = int(top_y - clipping_factor)
         d_bottom_x = int(bottom_x + clipping_factor)
@@ -101,8 +101,8 @@ for row in cursor:
             bottom_x = int(bottom_x + clipping_factor)
             bottom_y = int(bottom_y + clipping_factor)
             break
-            # decrement factor till it fits
-            clipping_factor -= 1
+        # decrement factor till it fits
+        clipping_factor -= 1
     # finaly - crop the image
     img3 = img2.crop((top_x, top_y, bottom_x, bottom_y))
     # dump the old exif data to the image
