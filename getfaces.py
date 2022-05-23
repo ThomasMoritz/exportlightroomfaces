@@ -10,7 +10,7 @@ import argparse
 # Commandline Handling
 
 parser = argparse.ArgumentParser(description='Export faces from Lightroom DB')
-parser.add_argument('-d', '--database', help='Input Database', required=True)
+parser.add_argument('-d', '--database', help=r"Input Database (e.g. C:\Users\...\Pictures\Lightroom\Lightroom Catalog.lrcat)", required=True)
 parser.add_argument('-o', '--output', help='Output Directory', required=True)
 parser.add_argument('-n', '--name', help='Name of Person', required=True)
 parser.add_argument('-ee', '--exclude_extensions', help='File extensions to exclude', required=False)
